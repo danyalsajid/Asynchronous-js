@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        >
+        <title>Promise</title>
+    </head>
+    <body></body>
+
+    <script>
+        const getTodos = (resource) => {
+
+            return new Promise((resolve, reject) => {
+                const request = new XMLHttpRequest();
+
+                request.addEventListener('readystatechange', () => {
+                    // console.log(request, request.readyState);
+                    if(request.readyState === 4 && request.status === 200) {
+                        resolve(JSON.parse(request.responseText))
+                    }
+                    else if(request.readyState === 4) {
+                        reject('Could not fetch data');
+                    }
+                });
+
+                request.open('GET',resource);
+                request.send();
+            })
+
+            
+        }
+
+        getTodos('data/luigi.json')
+            .then(data => {
+                console.log('Promise 1 Resolved: ', data);
+                return getTodos('data/mario.json');
+            })
+            .then(data => {
+                console.log("Promise 2 resolved: ", data);
+                return getTodos('data/shaun.json')
+            })
+            .then(data => {
+                console.log("Promise 3 resolved: ", data);
+            })
+            .catch(err => console.log(err))
+
+
+       
+
+    </script>
+</html>

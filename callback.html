@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        >
+        <title>Callback</title>
+    </head>
+    <body></body>
+
+    <script>
+        const getTodos = (resource ,callback) => {
+            const request = new XMLHttpRequest();
+
+            request.addEventListener('readystatechange', () => {
+                // console.log(request, request.readyState);
+                if(request.readyState === 4 && request.status === 200) {
+                    callback(undefined, JSON.parse(request.responseText));
+                }
+                else if(request.readyState === 4) {
+                    callback('Could not fetch data', undefined);
+                }
+            });
+
+            request.open('GET',resource);
+            request.send();
+        }
+
+        getTodos('data/luigi.json',(err, data) => {
+            console.log(data);
+            getTodos('data/mario.json', (err, data) => {
+                console.log(data)
+                getTodos('data/shaun.json', (err, data) => {
+                    console.log(data);
+                });
+            });
+        });
+    </script>
+</html>
